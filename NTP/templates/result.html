@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Results Page</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+  
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		#bg1{
+			 background-image: url("/static/img/resultBck.jpg");
+			 background-repeat: no-repeat;
+    		 background-size: cover;
+		}
+		h1{
+			color: darkblue;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
+			text-align: center;
+		}
+		#obj{
+			color: blue;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
+			text-align: center;
+		}
+		#ic{
+			color: purple;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
+			text-align: center;
+		}
+		h3{
+			color:darkgreen;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
+			text-align: center;
+		}
+		body {font-family: Arial, Helvetica, sans-serif;}
+
+		#myImg {
+		  border-radius: 5px;
+		  cursor: pointer;
+		  transition: 0.3s;
+		}
+
+		#myImg:hover {opacity: 0.5;}
+
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+		}
+
+		/* Modal Content (image) */
+		.modal-content {
+		  margin: auto;
+		  display: block;
+		  width: 80%;
+		  max-width: 700px;
+		}
+
+		/* Caption of Modal Image */
+		#caption {
+		  margin: auto;
+		  display: block;
+		  width: 80%;
+		  max-width: 700px;
+		  text-align: center;
+		  color: #ccc;
+		  padding: 10px 0;
+		  height: 150px;
+		}
+
+		/* Add Animation */
+		.modal-content, #caption {  
+		  -webkit-animation-name: zoom;
+		  -webkit-animation-duration: 0.6s;
+		  animation-name: zoom;
+		  animation-duration: 0.6s;
+		}
+
+		@-webkit-keyframes zoom {
+		  from {-webkit-transform:scale(0)} 
+		  to {-webkit-transform:scale(1)}
+		}
+
+		@keyframes zoom {
+		  from {transform:scale(0)} 
+		  to {transform:scale(1)}
+		}
+
+		/* The Close Button */
+		.close {
+		  position: absolute;
+		  top: 15px;
+		  right: 35px;
+		  color: #f1f1f1;
+		  font-size: 40px;
+		  font-weight: bold;
+		  transition: 0.3s;
+		}
+
+		.close:hover,
+		.close:focus {
+		  color: #bbb;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		/* 100% Image Width on Smaller Screens */
+		@media only screen and (max-width: 700px){
+		  .modal-content {
+		    width: 100%;
+		  }
+		}
+
+	</style>
+</head>
+<body id="bg1">
+	<center><img src='/static/img/ntp-logo2.png' height="150" width="300"></center>
+	<h1>{{msg1}}</h1><br>
+	<center>
+	<table border=0>
+		<tr align="center">
+			<th><h3>Output Image</h3></th>
+			<th><h3>Object Detection</h3></th>
+			
+		</tr>
+		<tr align="center">
+			<td>
+				<img src="/static/img/{{pic}}" height="400" width="400"><br>
+			</td>
+			<td>
+				{%for i,j in brands%}
+					<h2 id="obj">{{i}} --> {{j}} %</h2><br>
+				{%endfor%}
+			</td>
+			
+			
+		</tr>
+	</table>
+	<br>
+
+	<h3>Click to View Statistics</h3>
+	<img id="myImg" src="{{url_for('static',filename='img/brand_graph2.png')}}" alt="Brands Track" style="width:100%;max-width:300px;">
+	
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+	  <span class="close">&times;</span>
+	  <img class="modal-content" id="img01">
+	  <div id="caption"></div>
+	</div>
+	
+	</center>
+	<script>
+		// Get the modal
+		var modal = document.getElementById('myModal');
+
+		// Get the image and insert it inside the modal - use its "alt" text as a caption
+		var img = document.getElementById('myImg');
+		var modalImg = document.getElementById("img01");
+		var captionText = document.getElementById("caption");
+		img.onclick = function(){
+		  modal.style.display = "block";
+		  modalImg.src = this.src;
+		  captionText.innerHTML = this.alt;
+		}
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() { 
+		  modal.style.display = "none";
+		}
+	</script>
+	<form action="{{url_for('send_mail')}}" method="POST" autocomplete="off">
+		<center><h2>Get output on mail!</h2>
+		<h3>Enter your email-id: </h3><input type="text" name="user_email">
+		<input type="submit" name="submit" value="Submit"></center>
+	</form>
+
+	<div class="container">
+	<div class="top">
+		<h2>Were the results satisfactory?</h2>
+	</div>
+	  <div class="row">
+
+	  	<div class="dropdown">
+		  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
+		  <span class="caret"></span></button>
+		  <ul class="dropdown-menu">
+		    <li><a href="{{url_for('Thankyou')}}">Yes</a></li>
+		    <li><a href="{{url_for('Complaint')}}">No</a></li>
+		<!--     <li><a href="#">JavaScript</a></li>
+		 -->  </ul>
+		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+					<a href="{{url_for('showmap')}}"><button class="btn btn-primary dropdown-toggle">Show on map</button></a>
+
+	<!-- 	 <button type="button" class="btn btn-primary">Submit</button>
+	 -->	 
+	</div>
+	</div><br><br><br>
+</body>
+
+</html>

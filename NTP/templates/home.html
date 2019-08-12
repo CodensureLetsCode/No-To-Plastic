@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome</title>
+	<style>
+		#t1{
+			color: white;
+			font-size: 20px;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
+
+		}
+		#bg{
+			 background-image: url("/static/img/b1.png");
+			 background-repeat: no-repeat;
+    		 background-size: cover;
+		}
+		.square_btn{
+		    display: inline-block;
+		    padding: 0.5em 1em;
+		    text-decoration: none;
+		    border-radius: 0px;
+		    font-weight: bold;
+		    color: #FFF;
+		    background-image: -webkit-linear-gradient(45deg, #709dff 0%, #000000 100%);
+		    background-image: linear-gradient(45deg, #709dff 0%, #000111 100%);
+		    transition: .4s;
+		}
+
+		.square_btn:hover{
+		    background-image: -webkit-linear-gradient(45deg, #709dff 50%, #000000 100%);
+		    background-image: linear-gradient(45deg, #709dff 50%, #000111 100%);
+		}
+	</style>
+</head>
+<body id="bg">
+
+	<center><img src='/static/img/ntp-logo2.png' height="150" width="300"></center>
+	<h2 id="t1" align="center" style="font-size: 30px;">Hello {{username}}!</h2>
+	<center>
+		<h3 id="t1">Upload the image of Plastic Waste</h3>
+		<form action="{{url_for('uploadImage')}}" method="POST" enctype = "multipart/form-data">
+	  		<input class="square_btn" type="file" name="pic" accept="image/*"><br><br>
+	  		<input class="square_btn" type="submit" name="submit" value="Submit" onclick="getLocation()">
+		</form>
+	</center>
+
+	<p id="demo"></p>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+		var x = document.getElementById("demo");
+		
+		function getLocation() {
+		  if (navigator.geolocation) {
+		    navigator.geolocation.getCurrentPosition(showPosition, showError);
+		  } else { 
+		    x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+		}
+
+		function showPosition(position) {
+			var lat1 = position.coords.latitude
+			var lng1 = position.coords.longitude
+			x.innerHTML =  "<h2 id='t1' align='center'>Please Wait.. Detecting Brands..</h2>";
+			$.ajax({
+			type: "POST",
+	        contentType: "application/json;charset=utf-8",
+	        url: "{{url_for('storeLocation')}}",
+	        traditional: "true",
+	        data: JSON.stringify({"Latitude":lat1,"Longitude":lng1}),
+	        dataType: "json"
+	        });
+		   	
+		}
+
+		function showError(error) {
+		  switch(error.code) {
+		    case error.PERMISSION_DENIED:
+		      x.innerHTML = "User denied the request for Geolocation."
+		      break;
+		    case error.POSITION_UNAVAILABLE:
+		      x.innerHTML = "Location information is unavailable."
+		      break;
+		    case error.TIMEOUT:
+		      x.innerHTML = "The request to get user location timed out."
+		      break;
+		    case error.UNKNOWN_ERROR:
+		      x.innerHTML = "An unknown error occurred."
+		      break;
+		  }
+		}
+	</script>
+
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	
+    <script type="text/javascript">
+        function GetAddress(lat1,lng1) {
+        	var loc=showPosition()
+            var lat = loc[0]
+            var lng = loc[1]
+            alert(lat+" "+lng)
+            var latlng = new google.maps.LatLng(lat, lng);
+            var geocoder = geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        //alert(results[1].formatted_address);
+                    }
+                }
+            });
+
+           
+            
+        }
+    </script>
+</body>
+</html>
